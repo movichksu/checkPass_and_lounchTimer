@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             }
             else{
                 findViewById<TextView>(R.id.tv_rezult).text = "Your password is wrong!"
-                model.getTimer() 
+                model.startTimer()
             }
         }
 

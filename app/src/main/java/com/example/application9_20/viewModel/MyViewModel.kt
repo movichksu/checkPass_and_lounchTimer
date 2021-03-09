@@ -10,34 +10,36 @@ class MyViewModel(
 ) : ViewModel(){
 
     val viewText = MutableLiveData<String>()
+    lateinit var timer : CountDownTimer
 
-    fun getTimer(){
-        val timer = object: CountDownTimer(20000, 1000) {
+    private fun getTimer(millisInFuture : Long) : CountDownTimer{
+        return object : CountDownTimer(millisInFuture, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 viewText.postValue("${millisUntilFinished / 1000}")
             }
             override fun onFinish() {
                 viewText.postValue("${0}")
             }
-        }.start()
+        }
+    }
+
+    fun startTimer(){
+        timer.cancel()
+        timer = getTimer(20000)
+        timer.start()
     }
 
     fun continueTimer(datamanager : DataManager, context : Context){
-        //val sp = context.getSharedPreferences("KEY_TIMER", 0)
+        //timer.cancel()
         val num = datamanager.getCurrentTime().toLong()*1000
 
         if (num == 0.toLong()){
             return
         }
         else{
-            val timer = object: CountDownTimer(num, 1000) {
-                override fun onTick(millisUntilFinished: Long) {
-                    viewText.postValue("${millisUntilFinished / 1000}")
-                }
-                override fun onFinish() {
-                    viewText.postValue("${0}")
-                }
-            }.start()
+            timer = getTimer(num)
+            timer.start()
+
         }
     }
 
