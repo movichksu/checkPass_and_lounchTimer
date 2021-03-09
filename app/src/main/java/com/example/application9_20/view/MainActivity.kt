@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.application9_20.R
+import com.example.application9_20.model.DataManager
 import com.example.application9_20.viewModel.MyViewModel
 
 
@@ -24,13 +25,18 @@ class MainActivity : AppCompatActivity() {
         val model  = ViewModelProvider(this).get(MyViewModel :: class.java)
         val sp = getSharedPreferences(KEY_PASSWORD, 0)
         val spTimer = getSharedPreferences("KEY_TIMER", 0)
+        //spTimer.edit().putString("KEY_TIMER", "0").apply()
+        //findViewById<TextView>(R.id.tv_timer).text = " "
 
         model.viewText.observe(this, Observer<String> {
             findViewById<TextView>(R.id.tv_timer).text = it
             spTimer.edit().putString("KEY_TIMER", it).apply()
         })
 
+        model.continueTimer(DataManager(this.baseContext),this.baseContext)
+
         findViewById<Button>(R.id.btn_check).setOnClickListener{
+
             sp.edit().putString(KEY_PASSWORD, findViewById<EditText>(R.id.et_password).text.toString()).apply()
             if (rightPassword.compareTo(sp.getString(KEY_PASSWORD," ").toString()) == 0){
                 findViewById<TextView>(R.id.tv_rezult).text = "Your password is right!"
